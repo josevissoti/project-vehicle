@@ -1,22 +1,48 @@
-package com.project.vehicle.domains;
+package com.project.domains;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Entity
+@Table(name = "veiculo")
 public class Veiculo {
-    private Long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_veiculo")
+    private long idVeiculo;
+
+    @NotNull
+    @NotBlank
     private String descricao;
-    private LocalDate dataAquisicao;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataAquisicao = LocalDate.now();
+
+    @NotNull
+    @Digits(integer = 15, fraction = 3)
     private BigDecimal valorAquisicao;
+
+    @NotNull
+    @NotBlank
     private String nomeProprietario;
+
+    @NotNull
+    @NotBlank
     private String cpfProprietario;
 
     public Veiculo() {
+        this.valorAquisicao = BigDecimal.ZERO;
     }
 
-    public Veiculo(Long id, String descricao, LocalDate dataAquisicao, BigDecimal valorAquisicao, String nomeProprietario, String cpfProprietario) {
-        this.id = id;
+    public Veiculo(long idVeiculo, String descricao, LocalDate dataAquisicao, BigDecimal valorAquisicao, String nomeProprietario, String cpfProprietario) {
+        this.idVeiculo = idVeiculo;
         this.descricao = descricao;
         this.dataAquisicao = dataAquisicao;
         this.valorAquisicao = valorAquisicao;
@@ -24,12 +50,12 @@ public class Veiculo {
         this.cpfProprietario = cpfProprietario;
     }
 
-    public Long getId() {
-        return id;
+    public long getIdVeiculo() {
+        return idVeiculo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdVeiculo(long idVeiculo) {
+        this.idVeiculo = idVeiculo;
     }
 
     public String getDescricao() {
@@ -76,11 +102,11 @@ public class Veiculo {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Veiculo veiculo = (Veiculo) o;
-        return Objects.equals(id, veiculo.id) && Objects.equals(descricao, veiculo.descricao);
+        return Objects.equals(idVeiculo, veiculo.idVeiculo) && Objects.equals(descricao, veiculo.descricao);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, descricao);
+        return Objects.hash(idVeiculo, descricao);
     }
 }
