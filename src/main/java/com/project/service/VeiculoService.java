@@ -3,6 +3,7 @@ package com.project.service;
 import com.project.domains.Veiculo;
 import com.project.domains.dtos.VeiculoDTO;
 import com.project.repositories.VeiculoRepository;
+import com.project.service.exceptions.DataIntegrityViolationException;
 import com.project.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,32 @@ public class VeiculoService {
     public Veiculo findByCpfProprietario(String cpfProprietario) {
         Optional<Veiculo> obj = veiculoRepository.findByCpfProprietario(cpfProprietario);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Veículo não encontrado. CPF do proprietário: " + cpfProprietario));
+    }
+
+    public Veiculo create(VeiculoDTO veiculoDTO) {
+        veiculoDTO.setIdVeiculo(null);
+        validaVeiculo(veiculoDTO);
+        Veiculo obj = new Veiculo(veiculoDTO);
+        return veiculoRepository.save(obj);
+    }
+
+    public void validaVeiculo(VeiculoDTO veiculoDTO) {
+        Optional<Veiculo> obj = veiculoRepository.findByCpfProprietario(veiculoDTO.getCpfProprietario());
+        if (obj.isPresent() && obj.get().getIdVeiculo() != veiculoDTO.getIdVeiculo()) {
+            throw new DataIntegrityViolationException("CPF do proprietário já cadastrado");
+        }
+    }
+
+    public Veiculo update(Long id, VeiculoDTO objDTO) {
+        objDTO.setIdVeiculo(id);
+        Veiculo oldObj = findById(id);
+        validaVeiculo(objDTO);
+        oldObj = new Veiculo(objDTO);
+        return veiculoRepository.save(oldObj);
+    }
+
+    public void delete(Long id) {
+        Veiculo obj = findById(id);
+        veiculoRepository.deleteById(id);
     }
 }

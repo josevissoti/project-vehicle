@@ -1,6 +1,7 @@
 package com.project.domains;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.domains.dtos.VeiculoDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +17,7 @@ public class Veiculo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_veiculo")
-    private long idVeiculo;
+    private Long idVeiculo;
 
     @NotNull
     @NotBlank
@@ -35,13 +36,14 @@ public class Veiculo {
 
     @NotNull
     @NotBlank
+    @Column(unique = true)
     private String cpfProprietario;
 
     public Veiculo() {
         this.valorAquisicao = BigDecimal.ZERO;
     }
 
-    public Veiculo(long idVeiculo, String descricao, LocalDate dataAquisicao, BigDecimal valorAquisicao, String nomeProprietario, String cpfProprietario) {
+    public Veiculo(Long idVeiculo, String descricao, LocalDate dataAquisicao, BigDecimal valorAquisicao, String nomeProprietario, String cpfProprietario) {
         this.idVeiculo = idVeiculo;
         this.descricao = descricao;
         this.dataAquisicao = dataAquisicao;
@@ -50,11 +52,20 @@ public class Veiculo {
         this.cpfProprietario = cpfProprietario;
     }
 
-    public long getIdVeiculo() {
+    public Veiculo(VeiculoDTO veiculoDTO) {
+        this.idVeiculo = veiculoDTO.getIdVeiculo();
+        this.descricao = veiculoDTO.getDescricao();
+        this.dataAquisicao = veiculoDTO.getDataAquisicao();
+        this.valorAquisicao = veiculoDTO.getValorAquisicao();
+        this.nomeProprietario = veiculoDTO.getNomeProprietario();
+        this.cpfProprietario = veiculoDTO.getCpfProprietario();
+    }
+
+    public Long getIdVeiculo() {
         return idVeiculo;
     }
 
-    public void setIdVeiculo(long idVeiculo) {
+    public void setIdVeiculo(Long idVeiculo) {
         this.idVeiculo = idVeiculo;
     }
 

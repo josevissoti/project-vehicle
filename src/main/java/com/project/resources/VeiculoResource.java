@@ -3,13 +3,13 @@ package com.project.resources;
 import com.project.domains.Veiculo;
 import com.project.domains.dtos.VeiculoDTO;
 import com.project.service.VeiculoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -34,5 +34,25 @@ public class VeiculoResource {
     public ResponseEntity<VeiculoDTO> findByCpfProprietario(@PathVariable String cpfProprietario) {
         Veiculo obj = this.veiculoService.findByCpfProprietario(cpfProprietario);
         return ResponseEntity.ok().body(new VeiculoDTO(obj));
+    }
+
+    @PostMapping
+    public ResponseEntity<VeiculoDTO> create(@Valid @RequestBody VeiculoDTO veiculoDTO) {
+        Veiculo veiculo = veiculoService.create(veiculoDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(veiculo.getIdVeiculo()).toUri();
+        return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<VeiculoDTO> update(@PathVariable Long id, @Valid @RequestBody VeiculoDTO objDTO) {
+        Veiculo veiculo = veiculoService.update(id, objDTO);
+        return ResponseEntity.ok().body(new VeiculoDTO(veiculo));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<VeiculoDTO> delete(@PathVariable Long id) {
+        veiculoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

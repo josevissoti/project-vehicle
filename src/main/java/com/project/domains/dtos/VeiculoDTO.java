@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 public class VeiculoDTO {
 
-    private long idVeiculo;
+    private Long idVeiculo;
 
     @NotNull(message = "O campo descricao não pode ser nulo")
     @NotBlank(message = "O campo descricao não pode ser vazio")
@@ -44,11 +44,11 @@ public class VeiculoDTO {
         this.cpfProprietario = veiculo.getCpfProprietario();
     }
 
-    public long getIdVeiculo() {
+    public Long getIdVeiculo() {
         return idVeiculo;
     }
 
-    public void setIdVeiculo(long idVeiculo) {
+    public void setIdVeiculo(Long idVeiculo) {
         this.idVeiculo = idVeiculo;
     }
 
